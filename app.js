@@ -30,20 +30,15 @@ app.listen(port, ip, () => {
 
 
 function relayRequestHeaders(proxyReq, req) {
-    // console.log(`進了relayRequestHeaders`);
     if (cookie) {
-        // console.log(`有cookie`);
         proxyReq.setHeader('cookie', cookie);
         console.log(proxyReq.getHeader('Cookie'));
     }
 };
 
 function relayResponseHeaders(proxyRes, req, res) {
-    // console.log(`進了relayResponseHeaders`);
     var proxyCookie = proxyRes.headers["set-cookie"];
     if (proxyCookie) {
-        // console.log(`有proxyCookie`);
         cookie = proxyCookie;
-        console.log(cookie);
     }
 };
