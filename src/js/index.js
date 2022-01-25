@@ -24,8 +24,8 @@ function getAjax() {
 
                 return item.name.length <= 5;
             });
-
-            drawHtml(dataFilter);
+            let its_dic = new Dictionary()
+            its_dic.drawhtml(dataFilter)
             const myTimeout = setTimeout(() => {
                 getAjax();
             }, 2000);

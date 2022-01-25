@@ -1,37 +1,3 @@
-function drawHtml(data) {
-    let html = ''
-
-    Dictionary.forEach(function (DictionaryItem, Dictionarykey) {
-        data.forEach(function (dataItem, dataKey) {
-
-            if (DictionaryItem.name === dataItem.name) {
-                const DictionaryName = DictionaryItem.name;
-                const DictionaryUnit = DictionaryItem.unit;
-                const count = dataItem.count
-                let color = getColors(count, DictionaryItem);
-                let icon = getIconStatus(count, DictionaryItem);
-                html += `
-                    <div class="btn btn-lg sensor-group">
-                        <div class="group-name">
-                            <div class="label"><img src="${DictionaryItem.display}" alt="${DictionaryName}"></div>
-                        </div>
-                        <div class="group-value">
-                            <span class="label" style="color:${color}">${count}</span>
-                        </div>
-                        <div class="group-unit">
-                            <div class="label" >${DictionaryUnit}</div>
-                        </div>
-                        <div class="group-icon">
-                            ${icon}
-                        </div>
-                    </div>
-                `;
-            }
-        });
-    });
-    $('#Content').html(html);
-}
-
 function getStatus(count, DictionaryItem) {
 
     if (!count || !DictionaryItem) {
