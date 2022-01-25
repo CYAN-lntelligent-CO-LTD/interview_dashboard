@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./jquery-3.4.0.min.js"></script>
+    <link rel="stylesheet" href="./all.min.css">
+    <title>ITS_Web</title>
+
+    <style>
+        #Panel {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        #Content {
+            background: url('./icon/bule.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: #fff;
+            text-align: center;
+            margin: 0.5rem;
+            border-radius: .6rem;
+            font-weight: bold;
+            position: absolute;
+            line-height: 2rem;
+        }
+
+        .sensor-group {
+            display: flex;
+            font-size: 1.5rem;
+            padding: .5rem;
+            margin: 1rem;
+        }
+
+        .group-name {
+            width: 100px;
+            height: 100px;
+            word-wrap: break-word;
+            text-align: center;
+            position: relative;
+            margin-left: 0.5rem;
+        }
+
+        .group-name .label {
+            position: absolute;
+            right: 0;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .group-value {
+            margin: auto;
+            font-size: 2.25rem;
+            text-align: center;
+        }
+
+        .group-unit {
+            font-size: 1rem;
+            padding-top: 1.5rem;
+            margin-right: .5rem;
+            position: relative;
+        }
+
+        .group-unit .label {
+            color: #2a2a2a;
+            font-size: 1.25rem;
+            position: absolute;
+            right: 0;
+            top: 35px;
+        }
+
+        .group-icon {
+            width: 20%;
+            margin-top: 5px;
+            font-size: 3.75rem;
+            margin-right: .5rem;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='Panel'>
+        <section id="Content"></section>
+    </div>
+    <script>
+        var its_proxy = 'http://192.168.0.210:3000'
+        login()
+        function login() {
+            let data = {
+                jsonrpc: "2.0",
+                method: "login",
+                params: {
+                    c_name: "admin",
+                    c_passwd: "admin"
+                },
+                id: 2
+            }
+            $.ajax({
+                url: its_proxy + '/public',
+                type: 'POST',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                crossDomain: true,
+                xhrFields: { withCredentials: false },
+                success: function (data) {
+                    if (data.result) {
+                        getAjax()
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                },
+            });
+        }
+
+        function getAjax() {
+
+            let data = {
+                jsonrpc: "2.0",
+                method: "get_tag_values",
+                params: null,
+                id: 2
+            }
+            $.ajax({
+                type: 'POST',
+                url: its_proxy+'/var',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                contentType: 'text/plain; charset=UTF-8',
+                success: function (res) {
+                    const data = res.result.data
+                    //物件轉陣列
+                    let dataArr = Object.entries(data)
+                        .map(([TagName, TagCount]) => {
+                            return { name: TagName, count: TagCount }
+                        });
+
+                    //陣列篩選需要的資料
+                    var dataFilter = dataArr.filter(function (item, index, array) {
+
+                        return item.name.length <= 5;
+                    });
+
+                    drawHtml(dataFilter);
+                    const myTimeout = setTimeout(() => {
+                        getAjax();
+                    }, 2000);
+                },
+                error: function (res) {
+                    console.log('url 錯誤')
+                },
+            });
+        }
+        function drawHtml(data) {
+            let html = ''
+
+            Dictionary.forEach(function (DictionaryItem, Dictionarykey) {
+                data.forEach(function (dataItem, dataKey) {
+
+                    if (DictionaryItem.name === dataItem.name) {
+                        const DictionaryName = DictionaryItem.name;
+                        const DictionaryUnit = DictionaryItem.unit;
+                        const count = dataItem.count
+                        let color = getColors(count, DictionaryItem);
+                        let icon = getIconStatus(count, DictionaryItem);
+                        html += `
+                            <div class="btn btn-lg sensor-group">
+                                <div class="group-name">
+                                    <div class="label"><img src="${DictionaryItem.display}" alt="${DictionaryItem.name}"></div>
+                                </div>
+                                <div class="group-value">
+                                    <span class="label" style="color:${color}">${count}</span>
+                                </div>
+                                <div class="group-unit">
+                                    <div class="label" >${DictionaryUnit}</div>
+                                </div>
+                                <div class="group-icon">
+                                    ${icon}
+                                </div>
+                            </div>
+                        `;
+
+
+                    }
+                });
+            });
+
+            $('#Content').html(html);
+        }
+
+        function getStatus(count, DictionaryItem) {
+
+            if (!count || !DictionaryItem) {
+                return '';
+            }
+            else if (0 <= count && count < DictionaryItem.value1) {
+                return 'status1'
+            }
+            else if (DictionaryItem.value1 <= count && count < DictionaryItem.value2) {
+                return 'status2'
+            }
+            else if (DictionaryItem.value2 <= count && count < DictionaryItem.value3) {
+                return 'status3'
+            }
+            else if (DictionaryItem.value3 <= count && count < DictionaryItem.value4) {
+                return 'status4'
+            }
+            if (DictionaryItem.value4 < count && count < DictionaryItem.value5 || DictionaryItem.value4 <= count) {
+                return 'status5'
+            }
+            return 'status5'
+        }
+        function getColors(data, DictionaryItem) {
+
+            let status = getStatus(data, DictionaryItem)
+
+            switch (status) {
+                case 'status1':
+                case 'status2':
+                case 'status3':
+                case 'status4':
+                    return '#ffc107'
+                case 'status5':
+                    return '#EB5757'
+                default:
+                    return '#c1c1c1'
+            }
+        }
+
+        function getIconStatus(data, DictionaryItem) {
+
+            let status = getStatus(data, DictionaryItem)
+            switch (status) {
+                case 'status1':
+                    return '<img src="./icon/laughing.png" alt="大笑">'
+                case 'status2':
+                    return '<img src="./icon/smiley.png" alt="笑臉">'
+
+                case 'status3':
+                    return '<img src="./icon/cryingface.png" alt="哭臉">'
+
+                case 'status4':
+                    return '<img src="./icon/cry.png" alt="大哭">'
+
+                case 'status5':
+                    return '<img src="./icon/anger.png" alt="生氣">'
+
+                default:
+                    return '<img src="./icon/anger.png" alt="生氣">'
+            }
+        }
+        var Dictionary = [
+            {
+                id: 0,
+                name: 'TEP',
+                display: './icon/溫度.png',
+                unit: '℃',
+                value1: 10,
+                value2: 20,
+                value3: 30,
+                value4: 40,
+                value5: 50,
+            },
+            {
+                id: 1,
+                name: 'HUM',
+                display: './icon/溼度.png',
+                unit: '%',
+                value1: 50,
+                value2: 60,
+                value3: 70,
+                value4: 80,
+                value5: 90,
+            },
+            {
+                id: 2,
+                name: 'PM25',
+                display: './icon/pm2.5.png',
+                unit: 'ug/m³',
+                value1: 35,
+                value2: 53,
+                value3: 58,
+                value4: 71,
+                value5: 100,
+            },
+            {
+                id: 3,
+                name: 'HCHO',
+                display: './icon/hcho.png',
+                unit: 'ppm',
+                value1: 0.1,
+                value2: 0.5,
+                value3: 1,
+                value4: 2,
+            },
+            {
+                id: 4,
+                name: 'CO2',
+                display: './icon/co2.png',
+                unit: 'ppm',
+                value1: 1000,
+                value2: 1200,
+                value3: 1600,
+                value4: 2000,
+                value5: 3000,
+            },
+            {
+                id: 5,
+                name: 'O3',
+                display: './icon/臭養.png',
+                unit: 'ppm',
+                value1: 0.164,
+                value2: 0.204,
+                value3: 0.404,
+                value4: 0.504,
+                value5: 0.604,
+            },
+        ]
+
+    </script>
+</body>
+
+</html>

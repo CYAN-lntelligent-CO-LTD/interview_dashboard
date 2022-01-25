@@ -1,0 +1,25 @@
+{
+  "name": "its_proxy_mingzhuan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CYAN-lntelligent-CO-LTD/ITS_proxy_mingzhuan.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CYAN-lntelligent-CO-LTD/ITS_proxy_mingzhuan/issues"
+  },
+  "homepage": "https://github.com/CYAN-lntelligent-CO-LTD/ITS_proxy_mingzhuan#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "http-proxy-middleware": "^2.0.2"
+  }
+}
