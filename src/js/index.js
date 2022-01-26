@@ -19,16 +19,10 @@ function getAjax() {
                     return { name: TagName, count: TagCount }
                 });
 
-            //陣列篩選需要的資料
-            var dataFilter = dataArr.filter(function (item, index, array) {
-
-                return item.name.length <= 5;
-            });
-            let its_dic = new Dictionary()
-            its_dic.drawhtml(dataFilter)
+            drawHtml(dataArr);
             const myTimeout = setTimeout(() => {
                 getAjax();
-            }, 2000);
+            }, 1000);
         },
         error: function () {
             console.log('url 錯誤')

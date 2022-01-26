@@ -1,107 +1,20 @@
-class Dictionary {
-    constructor(options) {
-        this.data = []
-    }
-    drawhtml(data) {
-        const dictArrys = this.dicArray();
-        let html = ''
-        dictArrys.forEach(function (DictionaryItem, Dictionarykey) {
-            data.forEach(function (dataItem, dataKey) {
-                if (DictionaryItem.name === dataItem.name) {
-                    const DictionaryName = DictionaryItem.name;
-                    const DictionaryUnit = DictionaryItem.unit;
-                    const count = dataItem.count
-                    let color = getColors(count, DictionaryItem);
-                    let icon = getIconStatus(count, DictionaryItem);
-                    html += `
-                        <div class="btn btn-lg sensor-group">
-                            <div class="group-name">
-                                <div class="label"><img src="${DictionaryItem.display}" alt="${DictionaryName}"></div>
-                            </div>
-                            <div class="group-value">
-                                <span class="label" style="color:${color}">${count}</span>
-                            </div>
-                            <div class="group-unit">
-                                <div class="label" >${DictionaryUnit}</div>
-                            </div>
-                            <div class="group-icon">
-                                ${icon}
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-        });
-        $('#Content').html(html);
-    }
-    dicArray() {
-        const dictionaryData = [
-            {
-                id: 0,
-                name: 'TEP',
-                display: './src/icon/temperature.png',
-                unit: '℃',
-                value1: 10,
-                value2: 20,
-                value3: 30,
-                value4: 40,
-                value5: 50,
-            },
-            {
-                id: 1,
-                name: 'HUM',
-                display: './src/icon/humidity.png',
-                unit: '%',
-                value1: 50,
-                value2: 60,
-                value3: 70,
-                value4: 80,
-                value5: 90,
-            },
-            {
-                id: 2,
-                name: 'PM25',
-                display: './src/icon/pm2.5.png',
-                unit: 'ug/m³',
-                value1: 35,
-                value2: 53,
-                value3: 58,
-                value4: 71,
-                value5: 100,
-            },
-            {
-                id: 3,
-                name: 'HCHO',
-                display: './src/icon/hcho.png',
-                unit: 'ppm',
-                value1: 0.1,
-                value2: 0.5,
-                value3: 1,
-                value4: 2,
-            },
-            {
-                id: 4,
-                name: 'CO2',
-                display: './src/icon/co2.png',
-                unit: 'ppm',
-                value1: 1000,
-                value2: 1200,
-                value3: 1600,
-                value4: 2000,
-                value5: 3000,
-            },
-            {
-                id: 5,
-                name: 'O3',
-                display: './src/icon/o3.png',
-                unit: 'ppm',
-                value1: 0.164,
-                value2: 0.204,
-                value3: 0.404,
-                value4: 0.504,
-                value5: 0.604,
-            },
-        ]
-        return dictionaryData
+class SensorTag {
+    constructor(id, name, display, unit, value1, value2, value3, value4, value5) {
+        this.id = id;
+        this.name = name;
+        this.display = display;
+        this.unit = unit;
+        this.value1 = value1;
+        this.value2 = value2;
+        this.value3 = value3;
+        this.value4 = value4;
+        this.value5 = value5;
     }
 }
+
+var tepObj = new SensorTag(1, 'TEP', './src/icon/temperature.png', '℃', 10, 20, 30, 40, 50)
+var humObj = new SensorTag(2, 'HUM', './src/icon/humidity.png', '%', 50, 60, 70, 80, 90)
+var pm25Obj = new SensorTag(3, 'PM25', './src/icon/pm2.5.png', 'ug/m³', 35, 53, 58, 71, 100)
+var hchoObj = new SensorTag(4, 'HCHO', './src/icon/hcho.png', 'ppm', 0.1, 0.5, 1, 2)
+var co2Obj = new SensorTag(5, 'CO2', './src/icon/co2.png', 'ppm', 1000, 1200, 1600, 2000, 3000)
+var o3Obj = new SensorTag(6, 'O3', './src/icon/o3.png', 'ppm', 0.164, 0.204, 0.404, 0.504, 0.604)
