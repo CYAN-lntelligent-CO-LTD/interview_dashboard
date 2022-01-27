@@ -14,20 +14,21 @@ const ip = "192.168.0.210";
 const its_server = "http://192.168.0.210:1123/jsonrpc";
 var cookie;
 
+app.use('/static',express.static('./client/dist'));
+
 // Proxy endpoints
 app.use('/', createProxyMiddleware({
     target: its_server,
     changeOrigin: true,
     onProxyReq: relayRequestHeaders,
-    onProxyRes: relayResponseHeaders
+    onProxyRes: relayResponseHeaders,
+    
 }));
-
 
 // Start Proxy
 app.listen(port, ip, () => {
-    console.log(`Starting Proxy at ${ip}:${port}`);
+    console.log(`Starting Proxy at http://${ip}:${port}/static/index.html`);
 });
-
 
 function relayRequestHeaders(proxyReq, req) {
     if (cookie) {
