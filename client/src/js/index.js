@@ -1,3 +1,5 @@
+import {drawHtml} from './content.js';
+import its_proxy from './login.js';
 function getAjax() {
     let data = {
         jsonrpc: "2.0",
@@ -20,12 +22,13 @@ function getAjax() {
                 });
 
             drawHtml(dataArr);
-            const myTimeout = setTimeout(() => {
-                getAjax();
-            }, 1000);
+            // const myTimeout = setTimeout(() => {
+            //     getAjax();
+            // }, 1000);
         },
         error: function () {
             console.log('url 錯誤')
         },
     });
 }
+export default getAjax

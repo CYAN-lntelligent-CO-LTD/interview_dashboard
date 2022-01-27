@@ -1,3 +1,5 @@
+import getAjax from './index.js';
+import img from './../icon/blue.png';
 const its_proxy = 'http://192.168.0.210:3000'
 $(function(){
     let data = {
@@ -19,6 +21,7 @@ $(function(){
         success: function (data) {
             if (data.result) {
                 getAjax(its_proxy)
+                $('#Content').css("background-image", 'url(' + img + ')');
             }
         },
         error: function () {
@@ -27,3 +30,4 @@ $(function(){
     });
 })
 
+export default its_proxy
