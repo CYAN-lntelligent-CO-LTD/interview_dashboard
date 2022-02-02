@@ -22,6 +22,9 @@ module.exports = {
                 collapseWhitespace: true,
             },
         }),
+        new webpack.DefinePlugin({
+            API_URL: JSON.stringify('http://192.168.0.210:3000'),
+        }),
     ],
     module: {
         rules: [

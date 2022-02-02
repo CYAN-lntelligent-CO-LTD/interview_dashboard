@@ -1,8 +1,8 @@
 const express = require('express');
 const ITS_Tag = require('./obj.js');
+const config = require('./config.json');
 
 const app = express();
-const port = 11231;
 
 let tags = [
     new ITS_Tag('TEP', 0, 60),
@@ -25,6 +25,6 @@ app.post('/jsonrpc/var', (req, res) => {
     res.send({result: {data: data}});
 });
 
-app.listen(port, () => {
-    console.log(`Starting ITS-Mock at http://0.0.0.0:${port}`);
+app.listen(config.ITS_server.port, config.ITS_server.ip, () => {
+    console.log(`Starting ITS-Mock at http://${config.ITS_server.ip}:${config.ITS_server.port}`);
 });

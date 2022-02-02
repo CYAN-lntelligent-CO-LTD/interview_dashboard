@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const config = require('./config.json');
 
 // Create Express Server
 const app = express();
@@ -8,17 +9,13 @@ const app = express();
 // allow cros
 app.use(cors())
 
-// Configuration
-const port = 3000;
-const ip = "192.168.0.210";
-const its_server = "http://192.168.0.210:1123/jsonrpc";
 var cookie;
 
 app.use('/static',express.static('./client/dist'));
 
 // Proxy endpoints
 app.use('/', createProxyMiddleware({
-    target: its_server,
+    target: `http://${config.ITS_server.ip}:${config.ITS_server.port}/jsonrpc`,
     changeOrigin: true,
     onProxyReq: relayRequestHeaders,
     onProxyRes: relayResponseHeaders,
@@ -26,8 +23,8 @@ app.use('/', createProxyMiddleware({
 }));
 
 // Start Proxy
-app.listen(port, ip, () => {
-    console.log(`Starting Proxy at http://${ip}:${port}/static/index.html`);
+app.listen(config.ITS_proxy.port, config.ITS_proxy.ip, () => {
+    console.log(`Starting Proxy at http://${config.ITS_proxy.ip}:${config.ITS_proxy.port}/static/index.html`);
 });
 
 function relayRequestHeaders(proxyReq, req) {
@@ -43,3 +40,5 @@ function relayResponseHeaders(proxyRes, req, res) {
         cookie = proxyCookie;
     }
 };
+
+module.exports = config;

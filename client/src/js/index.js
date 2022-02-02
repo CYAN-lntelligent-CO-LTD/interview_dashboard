@@ -1,5 +1,4 @@
 import {drawHtml} from './content.js';
-import its_proxy from './login.js';
 function getAjax() {
     let data = {
         jsonrpc: "2.0",
@@ -9,7 +8,7 @@ function getAjax() {
     }
     $.ajax({
         type: 'POST',
-        url: its_proxy + '/var',
+        url: API_URL + '/var',
         data: JSON.stringify(data),
         dataType: 'json',
         contentType: 'text/plain; charset=UTF-8',
