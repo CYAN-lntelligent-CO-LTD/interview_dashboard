@@ -23,7 +23,7 @@ module.exports = {
             },
         }),
         new webpack.DefinePlugin({
-            API_URL: JSON.stringify('http://192.168.0.210:3000'),
+            API_URL: JSON.stringify('http://0.0.0.0:3000'),
         }),
     ],
     module: {
