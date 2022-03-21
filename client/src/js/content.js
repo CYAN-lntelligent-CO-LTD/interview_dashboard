@@ -1,7 +1,15 @@
+import laughing from './../icon/laughing.png';
+import smiley from './../icon/smiley.png';
+import cryingface from './../icon/cryingface.png';
+import cry from './../icon/cry.png';
+import anger from './../icon/anger.png';
+import {tepObj, humObj, pm25Obj, hchoObj, co2Obj, o3Obj} from './dictionary.js';
 function drawHtml(data) {
     let html = ''
 
-    Dictionary.forEach(function (DictionaryItem, Dictionarykey) {
+    let sensorArray = [tepObj, humObj, pm25Obj, hchoObj, co2Obj, o3Obj]
+
+    sensorArray.forEach(function (DictionaryItem, Dictionarykey) {
         data.forEach(function (dataItem, dataKey) {
 
             if (DictionaryItem.name === dataItem.name) {
@@ -21,8 +29,7 @@ function drawHtml(data) {
                         <div class="group-unit">
                             <div class="label" >${DictionaryUnit}</div>
                         </div>
-                        <div class="group-icon">
-                            ${icon}
+                        <div class="group-icon"><img src=${icon} alt="">
                         </div>
                     </div>
                 `;
@@ -75,21 +82,23 @@ function getIconStatus(data, DictionaryItem) {
     let status = getStatus(data, DictionaryItem)
     switch (status) {
         case 'status1':
-            return '<img src="./src/icon/laughing.png" alt="大笑">'
+            return laughing
 
         case 'status2':
-            return '<img src="./src/icon/smiley.png" alt="笑臉">'
+            return smiley
 
         case 'status3':
-            return '<img src="./src/icon/cryingface.png" alt="哭臉">'
+            return cryingface
 
         case 'status4':
-            return '<img src="./src/icon/cry.png" alt="大哭">'
+            return cry
 
         case 'status5':
-            return '<img src="./src/icon/anger.png" alt="生氣">'
+            return anger
 
         default:
-            return '<img src="./src/icon/anger.png" alt="生氣">'
+            return anger
     }
 }
+
+export {drawHtml}

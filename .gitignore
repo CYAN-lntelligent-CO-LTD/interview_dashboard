@@ -6,7 +6,7 @@ __pycache__/
 node_modules
 # C extensions
 *.so
-
+client/dist/
 # Distribution / packaging
 .Python
 build/

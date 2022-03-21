@@ -1,3 +1,4 @@
+import {drawHtml} from './content.js';
 function getAjax() {
     let data = {
         jsonrpc: "2.0",
@@ -7,7 +8,7 @@ function getAjax() {
     }
     $.ajax({
         type: 'POST',
-        url: its_proxy + '/var',
+        url: API_URL + '/var',
         data: JSON.stringify(data),
         dataType: 'json',
         contentType: 'text/plain; charset=UTF-8',
@@ -19,19 +20,14 @@ function getAjax() {
                     return { name: TagName, count: TagCount }
                 });
 
-            //陣列篩選需要的資料
-            var dataFilter = dataArr.filter(function (item, index, array) {
-
-                return item.name.length <= 5;
-            });
-
-            drawHtml(dataFilter);
-            const myTimeout = setTimeout(() => {
-                getAjax();
-            }, 2000);
+            drawHtml(dataArr);
+            // const myTimeout = setTimeout(() => {
+            //     getAjax();
+            // }, 1000);
         },
         error: function () {
             console.log('url 錯誤')
         },
     });
 }
+export default getAjax

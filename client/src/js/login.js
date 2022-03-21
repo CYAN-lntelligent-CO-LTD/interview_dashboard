@@ -1,4 +1,5 @@
-const its_proxy = 'http://192.168.0.210:3000'
+import getAjax from './index.js';
+import img from './../icon/blue.png';
 $(function(){
     let data = {
         jsonrpc: "2.0",
@@ -10,7 +11,7 @@ $(function(){
         id: 2
     }
     $.ajax({
-        url: its_proxy + '/public',
+        url: API_URL + '/public',
         type: 'POST',
         data: JSON.stringify(data),
         dataType: 'json',
@@ -18,7 +19,8 @@ $(function(){
         xhrFields: { withCredentials: false },
         success: function (data) {
             if (data.result) {
-                getAjax(its_proxy)
+                getAjax(API_URL)
+                $('#Content').css("background-image", 'url(' + img + ')');
             }
         },
         error: function () {
@@ -26,4 +28,3 @@ $(function(){
         },
     });
 })
-
