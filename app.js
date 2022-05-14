@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const config = require('./config.json');
+const ITS_Tag = require('./obj.js');
 
 // Create Express Server
 const app = express();
@@ -8,26 +9,35 @@ const app = express();
 // allow cros
 app.use(cors())
 
-// Configuration
-const port = 3000;
-const ip = "192.168.0.210";
-const its_server = "http://192.168.0.210:1123/jsonrpc";
 var cookie;
 
-// Proxy endpoints
-app.use('/', createProxyMiddleware({
-    target: its_server,
-    changeOrigin: true,
-    onProxyReq: relayRequestHeaders,
-    onProxyRes: relayResponseHeaders
-}));
+app.use('/static', express.static('./'));
 
+let tags = [
+    new ITS_Tag('TEP', 0, 60),
+    new ITS_Tag('HUM', 40, 100),
+    new ITS_Tag('PM25', 20, 110),
+    new ITS_Tag('HCHO', 0, 3),
+    new ITS_Tag('CO2', 0, 4000),
+    new ITS_Tag('O3', 0.1, 0.7),
+    new ITS_Tag('_other', 0, 100),
+]
 
-// Start Proxy
-app.listen(port, ip, () => {
-    console.log(`Starting Proxy at ${ip}:${port}`);
+app.post('/jsonrpc/public', (req, res) => {
+    res.send({result: true});
 });
 
+app.post('/jsonrpc/var', (req, res) => {
+    let data = Object.fromEntries(tags.map(
+        t => [t.name, t.random()]
+    ));
+    res.send({result: {data: data}});
+});
+
+// Start Proxy
+app.listen(config.ITS_proxy.port, config.ITS_proxy.ip, () => {
+    console.log(`Starting Proxy at http://${config.ITS_proxy.ip}:${config.ITS_proxy.port}/static/index.html`);
+});
 
 function relayRequestHeaders(proxyReq, req) {
     if (cookie) {
@@ -42,3 +52,5 @@ function relayResponseHeaders(proxyRes, req, res) {
         cookie = proxyCookie;
     }
 };
+
+module.exports = config;

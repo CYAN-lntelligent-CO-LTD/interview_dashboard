@@ -1,4 +1,4 @@
-const its_proxy = 'http://192.168.0.210:3000'
+const its_proxy = 'http://localhost:3000/jsonrpc'
 $(function(){
     let data = {
         jsonrpc: "2.0",
